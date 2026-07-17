@@ -1,16 +1,11 @@
-import { useState } from 'react'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-
+import { Button } from "@/components/ui/button";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>Oakfolio</h1>
-    </>
-  )
+    <div className="min-h-screen flex items-center justify-center">
+      <Button>Oakfolio</Button>
+    </div>
+  );
 }
 
-export default App
+export default App;
