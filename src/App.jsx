@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
+import AppRouter from '@/routes/AppRouter'
+import AuthProvider from '@/contexts/AuthProvider'
 
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Button>Oakfolio</Button>
-    </div>
+    <AuthProvider>
+      <AppRouter />
+    </AuthProvider>
   );
 }
 
