@@ -1,6 +1,7 @@
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
+import { playwright } from '@vitest/browser-playwright'
 import path from "path"
 
 export default defineConfig({
@@ -12,5 +13,14 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  test: {
+      browser: {
+        enabled: true,
+        provider: playwright(),
+        instances: [
+          { browser: 'firefox' },
+        ],
+      },
   },
 })
