@@ -11,8 +11,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 
+import { useNavigate } from 'react-router'
+
 
 const LoginPage = () => {
+
+	const navigateTo = useNavigate()
+
+	const handleRegisterPageRedirect = () => {
+		navigateTo('/register')
+	}
+
 	return (
 		<>
 			<div className='flex min-h-screen items-center justify-center px-4'>
@@ -55,7 +64,7 @@ const LoginPage = () => {
 				  </CardContent>
 				  <CardFooter className="justify-center text-sm text-muted-foreground">
 	          Don't have an account?
-	          <Button variant="link" type="button" className="px-1">
+	          <Button variant="link" type="button" onClick={handleRegisterPageRedirect} className="px-1">
 	            Register
 	          </Button>
         	</CardFooter>
