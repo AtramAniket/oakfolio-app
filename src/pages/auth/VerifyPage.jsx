@@ -2,18 +2,68 @@ import {
   Card,
   CardTitle,
   CardHeader,
+  CardFooter,
   CardContent,
   CardDescription,
-  CardFooter,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { useNavigate } from 'react-router'
+import { useState, useEffect } from 'react'
 import { CircleCheckBig } from 'lucide-react'
+import authService from '@/services/authService'
+import { useNavigate, useSearchParams } from 'react-router'
+
 
 const VerifyPage = () => {
-
 	const navigateTo = useNavigate()
+  const [searchParams] = useSearchParams()
+
+  const token = searchParams.get('token')
+  const [loading, setLoading] = useState(false)
+
+
+
+
+  useEffect(()=>{
+    if(!token){
+      navigateTo('/register')
+      return
+    }
+    verifyUserRegistrationToken()
+  },[token])
+
+
+
+
+  const verifyUserRegistrationToken = async () =>{
+    setLoading(true)
+
+    try{
+
+      const response = await authService.verify_token({
+        verification_token: token,
+      })
+
+      if(response?.token_valid){
+        navigateTo('/set-password', {
+        state: {
+          token,
+        }
+      })
+      }
+      else{
+        navigateTo('/register')
+      }
+
+    }
+    catch(err){
+      console.log(err)
+    }
+    finally {
+      setLoading(false)
+    }
+
+  }
 
 	const handleLoginPageRedirect = () => {
 		navigateTo('/login')
