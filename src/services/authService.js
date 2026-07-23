@@ -8,6 +8,7 @@ const authService = {
 
 	verify_token: async (data) => {
 		const response = await api.post('/auth/verify-registration-token', data)
+		return response?.data
 	},
 
 	login: async (data) => {
