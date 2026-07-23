@@ -8,18 +8,28 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
+import { useEffect } from 'react'
 import { MailCheck } from 'lucide-react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 const CheckEmailPage = () => {
-  // TODO: Replace with actual email from state or query params
-  const email = 'johndoe@example.com';
+
+  const { state } = useLocation()
 
   const navigateTo = useNavigate()
 
+  const email = state?.email
+
+  useEffect(() => {
+     if(!email){
+      navigateTo('/register')
+    }
+  }, [email])
+  
 	const handleLoginPageRedirect = () => {
 		navigateTo('/login')
 	}
+
 
   return (
     <div className='flex min-h-screen items-center justify-center px-4'>
