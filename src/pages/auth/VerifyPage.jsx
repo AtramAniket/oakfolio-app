@@ -6,10 +6,14 @@ import {
   CardContent,
   CardDescription,
 } from '@/components/ui/card'
+import { CircleCheckBig } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import LoadingCard from '@/pages/auth/verify/LoadingCard'
+import VerificationSuccessCard from '@/pages/auth/verify/VerificationSuccessCard'
+import VerificationFailureCard from '@/pages/auth/verify/VerificationFailureCard'
+
 import { useState, useEffect } from 'react'
-import { CircleCheckBig } from 'lucide-react'
 import authService from '@/services/authService'
 import { useNavigate, useSearchParams } from 'react-router'
 
@@ -18,8 +22,8 @@ const VerifyPage = () => {
 	const navigateTo = useNavigate()
   const [searchParams] = useSearchParams()
 
-  const token = searchParams.get('token')
-  const [loading, setLoading] = useState(false)
+  const token = searchParams.get('token', null)
+  const [status, setStatus] = useState('loading')
 
 
 
@@ -36,7 +40,7 @@ const VerifyPage = () => {
 
 
   const verifyUserRegistrationToken = async () =>{
-    setLoading(true)
+    setStatus('loading')
 
     try{
 
@@ -44,59 +48,37 @@ const VerifyPage = () => {
         verification_token: token,
       })
 
-      if(response?.token_valid){
-        navigateTo('/set-password', {
-        state: {
-          token,
-        }
-      })
+      if(response?.status === 'valid'){
+        setStatus('success')
+
+        setTimeout(() => {
+          navigateTo('/set-password', {
+          state: {
+            token,
+          }
+        })
+        }, 600)
       }
       else{
-        navigateTo('/register')
+        setStatus('failure')
       }
 
     }
     catch(err){
       console.log(err)
     }
-    finally {
-      setLoading(false)
-    }
-
   }
 
-	const handleLoginPageRedirect = () => {
-		navigateTo('/login')
-	}
+  if(status === 'loading'){
+    return <LoadingCard />
+  }
 
-  return (
-    <div className='flex min-h-screen items-center justify-center px-4'>
-      <Card className='w-full max-w-md'>
-        <CardHeader className='space-y-4 text-center'>
-          <CircleCheckBig className='mx-auto h-12 w-12 text-green-600' />
+  if(status === 'success'){
+    return <VerificationSuccessCard />
+  }
 
-          <CardTitle>Email Verified</CardTitle>
+  return <VerificationFailureCard />
 
-          <CardDescription>
-            Your email has been successfully verified.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <p className='text-center text-sm text-muted-foreground'>
-            Your account is now ready to use. You can continue to the login page
-            and sign in with your credentials.
-          </p>
-        </CardContent>
-
-        <CardFooter className='justify-center'>
-          <Button className='w-full' onClick={handleLoginPageRedirect}>
-            Go to Login
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
-  )
 }
 
 export default VerifyPage;
