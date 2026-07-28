@@ -8,14 +8,14 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { Loader2 } from 'lucide-react'
+import Spinner from '@/components/common/Spinner'
 
 const LoadingCard = () => {
   return (
      <div className="flex min-h-screen items-center justify-center px-4">
        <Card className="w-full max-w-md">
          <CardHeader className="space-y-4 text-center">
-           <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" />
+           <Spinner />
 
            <CardTitle>Verifying Email</CardTitle>
 
