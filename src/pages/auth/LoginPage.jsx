@@ -11,15 +11,37 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 
+import {useState} from 'react'
 import { useNavigate } from 'react-router'
+import useAuth from '@/hooks/useAuth'
 
 
 const LoginPage = () => {
 
+	const { login } = useAuth()
+
 	const navigateTo = useNavigate()
+
+	const [user, setUser] = useState({'email':'', 'password':''})
 
 	const handleRegisterPageRedirect = () => {
 		navigateTo('/register')
+	}
+
+	const handleInputChange = (event) => {
+		const { name, value } = event.target
+
+		setUser((prevUser)=>(
+			{
+				...prevUser,
+				[name]: value
+			}))
+	}
+
+	const handleSubmit = async (event) => {
+		event.preventDefault()
+		await login(user)
+		navigateTo('/dashboard')
 	}
 
 	return (
@@ -31,7 +53,7 @@ const LoginPage = () => {
 				    <CardDescription>Signin to your account</CardDescription>
 				  </CardHeader>
 				  <CardContent>
-				    <form className="space-y-6">
+				    <form className="space-y-6" onSubmit={(e)=>handleSubmit(e)}>
 				    		
 				    		<div className="space-y-2">
 				    			<Label htmlFor='email'>Email</Label>
@@ -39,7 +61,10 @@ const LoginPage = () => {
 				    				required
 				    				id='email'
 				    				type='email'
+				    				name='email'
+				    				value={user.email}
 				  					placeholder='johndoe@example.com'
+				  					onChange={(e)=>handleInputChange(e)}
 				    			/>
 				    		</div>
 				    		
@@ -49,7 +74,10 @@ const LoginPage = () => {
 				    				required
 				    				id='password'
 				    				type='password'
+				    				name='password'
+				    				value={user.password}
 				    				placeholder='Enter your password'
+				    				onChange={(e)=>handleInputChange(e)}
 				    			/>
 				    		</div>
 				    		
@@ -59,7 +87,11 @@ const LoginPage = () => {
 		              </Button>
             		</div>
 
-            		<Button className="w-full" type='submit'>Login</Button>
+            		<Button 
+            			type='submit'
+            			className="w-full">
+            				Login
+            		</Button>
 				    </form>
 				  </CardContent>
 				  <CardFooter className="justify-center text-sm text-muted-foreground">
