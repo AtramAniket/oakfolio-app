@@ -44,9 +44,11 @@ const VerifyPage = () => {
 
     try{
 
-      const response = await authService.verify_token({
+      const response = await authService.verifyToken({
         verification_token: token,
       })
+
+      console.log(response)
 
       if(response?.status === 'valid'){
         setStatus('success')
