@@ -6,13 +6,18 @@ const authService = {
 		return response?.data
 	},
 
-	verify_token: async (data) => {
+	verifyToken: async (data) => {
 		const response = await api.post('/auth/verify-registration-token', data)
 		return response?.data
 	},
 
 	login: async (data) => {
 		const response = await api.post('/auth/login', data)
+		return response?.data
+	},
+
+	getCurrentUser: async () => {
+		const response = await api.get('/auth/me')
 		return response?.data
 	}
 }
