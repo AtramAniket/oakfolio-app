@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom'
 
-const PublicRoutes = () => {
+const OpenRoutes = () => {
 
 	return <Outlet />
 }
 
-export default PublicRoutes
+export default OpenRoutes

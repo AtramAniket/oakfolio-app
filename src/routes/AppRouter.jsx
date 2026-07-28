@@ -6,8 +6,8 @@ import {
 
 
 // Routes
+import OpenRoutes from '@/routes/OpenRoutes'
 import GuestRoutes from '@/routes/GuestRoutes'
-import PublicRoutes from '@/routes/PublicRoutes'
 import ProtectedRoutes from '@/routes/ProtectedRoutes'
 
 
@@ -37,13 +37,12 @@ const AppRouter = () => {
 
 				<Route element={<GuestRoutes />}>
 					<Route path='/login' element={<LoginPage />} />
-					<Route path='/verify' element={<VerifyPage />} />
 					<Route path='/register' element={<RegisterPage />} />
+				</Route>
+				<Route element={<OpenRoutes />}>
+					<Route path='/verify' element={<VerifyPage />} />
 					<Route path='/check-email' element={<CheckEmailPage />} />
 					<Route path='/set-password' element={<SetPasswordPage />} />
-				</Route>
-				<Route element={<PublicRoutes />}>
-					
 				</Route>
 				<Route element={<ProtectedRoutes />}>
 					<Route path='/dashboard' element={<DashboardPage />} />
