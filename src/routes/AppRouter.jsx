@@ -15,8 +15,6 @@ import RegistrationRoutes from '@/routes/RegistrationRoutes'
 import LoginPage from '@/pages/auth/LoginPage'
 import VerifyPage from '@/pages/auth/VerifyPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
-import CheckEmailPage from '@/pages/auth/CheckEmailPage'
-import SetPasswordPage from '@/pages/auth/SetPasswordPage'
 
 
 // Landing Page
