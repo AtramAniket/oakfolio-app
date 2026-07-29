@@ -6,9 +6,9 @@ import {
 
 
 // Routes
-import OpenRoutes from '@/routes/OpenRoutes'
 import GuestRoutes from '@/routes/GuestRoutes'
 import ProtectedRoutes from '@/routes/ProtectedRoutes'
+import RegistrationRoutes from '@/routes/RegistrationRoutes'
 
 
 // Auth Pages
@@ -39,10 +39,8 @@ const AppRouter = () => {
 					<Route path='/login' element={<LoginPage />} />
 					<Route path='/register' element={<RegisterPage />} />
 				</Route>
-				<Route element={<OpenRoutes />}>
+				<Route element={<RegistrationRoutes />}>
 					<Route path='/verify' element={<VerifyPage />} />
-					<Route path='/check-email' element={<CheckEmailPage />} />
-					<Route path='/set-password' element={<SetPasswordPage />} />
 				</Route>
 				<Route element={<ProtectedRoutes />}>
 					<Route path='/dashboard' element={<DashboardPage />} />
