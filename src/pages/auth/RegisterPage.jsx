@@ -1,118 +1,93 @@
-import {
-  Card,
-  CardTitle,
-  CardAction,
-  CardFooter,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
-
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import authService  from '@/services/authService'
 
+import RegisterForm from '@/pages/auth/components/RegisterForm'
+import CheckEmailCard from '@/pages/auth/components/CheckEmailCard'
+
+import authService from '@/services/authService'
+import { REGISTER_STEPS } from '@/constants/authFlow'
 
 const RegisterPage = () => {
+  const navigateTo = useNavigate()
 
-	const navigateTo = useNavigate()
+  const [step, setStep] = useState(REGISTER_STEPS.FORM)
 
-	const [error, setError] = useState('')
-	const [email, setEmail] = useState('')
-	const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [resendLoading, setResendLoading] = useState(false)
 
-	const handleFormSubmit = async (event) => {
-		event.preventDefault()
-		
-		setLoading(true)
+  const handleEmailInputChange = (event) => {
+    setEmail(event.target.value)
+  }
 
-		try{
+  const handleFormSubmit = async (event) => {
+    event.preventDefault()
 
-			const response = await authService.register({
-				email,
-			})
+    setError('')
+    setLoading(true)
 
-			navigateTo('/check-email', {
-				state: {
-					email,
-					response,
-				},
-			})
-		}
-		catch(err){
-			setError(
-				err.response?.data?.detail ??
-				'Something went wrong. Please try again' 
-			)
-		}
-		finally{
-			setLoading(false)
-		}
-	}
+    try {
+      await authService.register({
+        email,
+      })
 
-	const handleEmailInputChange = (event) => {
-		const { value } = event.target
-		setEmail(value)
-	}
+      setStep(REGISTER_STEPS.CHECK_EMAIL)
+    } catch (err) {
+      setError(
+        err.response?.data?.detail ??
+        'Something went wrong. Please try again.'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
 
-	const handleLoginPageRedirect = () => {
-		navigateTo('/login')
-	}
-	
-	return (
-		<>
-			<div className='flex min-h-screen items-center justify-center px-4'>
-				<Card className='w-full max-w-md'>
-				  <CardHeader className="space-y-2">
-				    <CardTitle>Create new account</CardTitle>
-				    <CardDescription>Enter your email address to receive a verification link</CardDescription>
-				  </CardHeader>
-				  <CardContent>
-				    <form className="space-y-6">
-				    		<div className="space-y-2">
-				    			<Label htmlFor='email'>Email</Label>
-				    			<Input
-				    				required
-				    				id='email'
-				    				type='email'
-				    				value={email}
-				  					placeholder='johndoe@example.com'
-				  					onChange={(event) => handleEmailInputChange(event)}
-				    			/>
-				    		</div>
+  const handleResendVerificationEmail = async () => {
+    setResendLoading(true)
 
-				    		{
-				    			error && (
-				    				<p className='text-sm text-destructive'>
-				    					{error}
-				    				</p>
-				    			)
-				    		}
+    try {
+      await authService.register({
+        email,
+      })
 
-				    		<Button 
-				    			type='submit'
-				    			disabled={loading}
-				    			className="w-full"
-				    			onClick={(event) => handleFormSubmit(event)}
-				    		>
-				    			{loading ? 'Creating account...' : 'Create Account'}
-				    		</Button>
-				    </form>
-				  </CardContent>
-				  <CardFooter className="justify-center text-sm text-muted-foreground">
-          	Already have an account?
-          	<Button 
-          		variant="link" type="button" onClick={handleLoginPageRedirect} className="px-1">
-            	Login
-          	</Button>
-        	</CardFooter>
-				</Card>
-			</div>
-		</>
-		)
+      setStep(REGISTER_STEPS.CHECK_EMAIL)
+      // TODO:
+      // await authService.resendVerificationEmail({ email })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setResendLoading(false)
+    }
+  }
+
+  const handleLoginRedirect = () => {
+    navigateTo('/login')
+  }
+
+  switch (step) {
+    case REGISTER_STEPS.CHECK_EMAIL:
+      return (
+        <CheckEmailCard
+          email={email}
+          resendLoading={resendLoading}
+          onLogin={handleLoginRedirect}
+          onResend={handleResendVerificationEmail}
+        />
+      )
+
+    default:
+      return (
+        <RegisterForm
+          email={email}
+          error={error}
+          loading={loading}
+          onSubmit={handleFormSubmit}
+          onLogin={handleLoginRedirect}
+          onEmailChange={handleEmailInputChange}
+        />
+      )
+  }
 }
 
 export default RegisterPage

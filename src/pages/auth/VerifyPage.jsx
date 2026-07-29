@@ -1,86 +1,132 @@
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardFooter,
-  CardContent,
-  CardDescription,
-} from '@/components/ui/card'
-import { CircleCheckBig } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-
-import LoadingCard from '@/pages/auth/verify/LoadingCard'
-import VerificationSuccessCard from '@/pages/auth/verify/VerificationSuccessCard'
-import VerificationFailureCard from '@/pages/auth/verify/VerificationFailureCard'
-
-import { useState, useEffect } from 'react'
-import authService from '@/services/authService'
+import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 
+import LoadingPage from '@/pages/common/LoadingPage'
+import SetPasswordCard from '@/pages/auth/components/SetPasswordCard'
+import VerificationFailureCard from '@/pages/auth/components/VerificationFailureCard'
+import RegistrationCompletedCard from '@/pages/auth/components/RegistrationCompletedCard'
+
+import authService from '@/services/authService'
+
+import { VERIFY_STEPS } from '@/constants/authFlow'
 
 const VerifyPage = () => {
-	const navigateTo = useNavigate()
+  const navigateTo = useNavigate()
   const [searchParams] = useSearchParams()
 
-  const token = searchParams.get('token', null)
-  const [status, setStatus] = useState('loading')
+  const token = searchParams.get('token')
 
+  const [step, setStep] = useState(VERIFY_STEPS.LOADING)
 
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-
-  useEffect(()=>{
-    if(!token){
-      navigateTo('/register')
-      return
-    }
-    verifyUserRegistrationToken()
-  },[token])
-
-
-
-
-  const verifyUserRegistrationToken = async () =>{
-    setStatus('loading')
-
-    try{
-
+  const verifyRegistrationToken = async () => {
+    try {
       const response = await authService.verifyToken({
         verification_token: token,
       })
 
-      console.log(response)
-
-      if(response?.status === 'valid'){
-        setStatus('success')
-
-        setTimeout(() => {
-          navigateTo('/set-password', {
-          state: {
-            token,
-          }
-        })
-        }, 600)
+      if (response.status === 'valid') {
+        setStep(VERIFY_STEPS.PASSWORD)
+      } else {
+        setStep(VERIFY_STEPS.FAILURE)
       }
-      else{
-        setStatus('failure')
-      }
-
-    }
-    catch(err){
-      console.log(err)
+    } catch (err) {
+      setStep(VERIFY_STEPS.FAILURE)
     }
   }
 
-  if(status === 'loading'){
-    return <LoadingCard />
+  useEffect(() => {
+    if (!token) {
+      navigateTo('/register', { replace: true })
+      return
+    }
+
+    verifyRegistrationToken()
+  }, [token])
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+
+    if (name === 'password') {
+      setPassword(value)
+    } else if (name === 'confirmPassword') {
+      setConfirmPassword(value)
+    }
   }
 
-  if(status === 'success'){
-    return <VerificationSuccessCard />
+  const handlePasswordSubmit = async (event) => {
+    event.preventDefault()
+
+    setError('')
+    setLoading(true)
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
+
+    try {
+      await authService.createNewUser({
+        token,
+        password,
+      })
+
+      setStep(VERIFY_STEPS.COMPLETED)
+    } catch (err) {
+      setError(
+        err.response?.data?.detail ??
+        'Something went wrong. Please try again.'
+      )
+    } finally {
+      setLoading(false)
+    }
   }
 
-  return <VerificationFailureCard />
+  const handleLoginRedirect = () => {
+    navigateTo('/login')
+  }
 
+  const handleRegisterRedirect = () => {
+    navigateTo('/register')
+  }
+
+  switch (step) {
+    case VERIFY_STEPS.LOADING:
+      return <LoadingPage />
+
+    case VERIFY_STEPS.PASSWORD:
+      return (
+        <SetPasswordCard
+          password={password}
+          confirmPassword={confirmPassword}
+          loading={loading}
+          error={error}
+          onInputChange={handleInputChange}
+          onSubmit={handlePasswordSubmit}
+        />
+      )
+
+    case VERIFY_STEPS.COMPLETED:
+      return (
+        <RegistrationCompletedCard
+          onLogin={handleLoginRedirect}
+        />
+      )
+
+    case VERIFY_STEPS.FAILURE:
+      return (
+        <VerificationFailureCard
+          onRegister={handleRegisterRedirect}
+        />
+      )
+
+    default:
+      return <LoadingPage />
+  }
 }
 
-export default VerifyPage;
+export default VerifyPage

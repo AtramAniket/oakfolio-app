@@ -81,8 +81,8 @@ const LoginPage = () => {
 				    			/>
 				    		</div>
 				    		
-				    		<div className="flex justify-end">
-		              <Button variant="link" type="button" className="px-0">
+				    		<div className='flex justify-end'>
+		              <Button variant='link' type='button' className='px-0'>
 		                Forgot password?
 		              </Button>
             		</div>
