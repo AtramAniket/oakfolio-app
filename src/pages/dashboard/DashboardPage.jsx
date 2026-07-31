@@ -1,7 +1,14 @@
+import PageHeader from '@/components/common/PageHeader'
+
 const DashboardPage = () => {
 	return (
 		<>
-			<h1>Dashboard Page</h1>
+			<PageHeader
+				title='Dashboard'
+				description='Monitor your portfolio performance and recent market activity.'
+			/>
+
+			{/*Dashboard content*/}
 		</>
 		)
 }

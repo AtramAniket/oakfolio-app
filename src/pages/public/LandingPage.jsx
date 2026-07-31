@@ -1,9 +1,14 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 const LandingPage = () => {
-	return (
-		<>
-			<h1>Landing Page</h1>
-		</>
-		)
+	const navigateTo = useNavigate()
+
+	useEffect(() => {
+		navigateTo('/login')
+	}, [])
+
+	return null
 }
 
 export default LandingPage
