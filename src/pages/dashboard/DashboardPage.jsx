@@ -1,4 +1,5 @@
 import PageHeader from '@/components/common/PageHeader'
+import MetricsCard from '@/components/dashboard/MetricsCard'
 
 const DashboardPage = () => {
 	return (
@@ -8,7 +9,7 @@ const DashboardPage = () => {
 				description='Monitor your portfolio performance and recent market activity.'
 			/>
 
-			{/*Dashboard content*/}
+			<MetricsCard title='Performance' />
 		</>
 		)
 }
