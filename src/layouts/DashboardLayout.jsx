@@ -11,7 +11,7 @@ const DashboardLayout = () => {
 			<div className='flex flex-1 flex-col'>
 				<AppTopbar />
 
-				<main className='flex-1'>
+				<main className='flex-1 p-6'>
 					<Outlet />
 				</main>
 			</div>

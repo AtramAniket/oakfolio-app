@@ -1,5 +1,6 @@
 import PageHeader from '@/components/common/PageHeader'
-import MetricsCard from '@/components/dashboard/MetricsCard'
+import PortfolioOverview from '@/components/dashboard/PortfolioOverview'
+import DashboardAnalytics from '@/components/dashboard/DashboardAnalytics'
 
 const DashboardPage = () => {
 	return (
@@ -9,7 +10,10 @@ const DashboardPage = () => {
 				description='Monitor your portfolio performance and recent market activity.'
 			/>
 
-			<MetricsCard title='Performance' />
+			<PortfolioOverview />
+
+			<DashboardAnalytics />
+
 		</>
 		)
 }

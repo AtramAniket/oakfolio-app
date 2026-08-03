@@ -5,19 +5,13 @@ import {
 	CardContent,
 } from '@/components/ui/card'
 
-const MetricsCard = ({
-	icon,
-	title,
-	value,
-	trend,
-	subtitle
-}) => {
-	const Icon = icon
+const MetricsCard = ({ metric }) => {
+	const Icon = metric?.icon
 	return (
 		<Card className='transition-shadow hover:shadow-md'>
 			<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 				<CardTitle className='text-sm font-medium text-muted-foreground'>
-					{title}
+					{metric?.title}
 				</CardTitle>
 				{
 					Icon && (
@@ -27,16 +21,16 @@ const MetricsCard = ({
 			</CardHeader>
 			<CardContent>
 				<div className='text-3xl font-bold'>
-					{value}
+					{metric?.value}
 				</div>
 				{
-					trend && (
-						<p>{trend}</p>
+					metric?.trend && (
+						<p className='text-xl'>{metric?.trend}</p>
 					)
 				}
 				{
-					subtitle && (
-						<p>{subtitle}</p>
+					metric?.subtitle && (
+						<p>{metric?.subtitle}</p>
 					)
 				}
 			</CardContent>
