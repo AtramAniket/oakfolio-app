@@ -1,4 +1,15 @@
 import {
+	Bar,
+	Cell,
+	XAxis,
+	YAxis,
+	Legend,
+	Tooltip,
+	BarChart,
+	ResponsiveContainer,
+} from 'recharts'
+
+import {
 	Card,
 	CardTitle,
 	CardHeader,
@@ -6,7 +17,7 @@ import {
 	CardDescription,
 } from '@/components/ui/card'
 
-const SectorAllocation = () => {
+const SectorAllocation = ({ data }) => {
 	return (
 		<Card className='transition-shadow hover:shadow-md'>
 			<CardHeader>
@@ -19,7 +30,25 @@ const SectorAllocation = () => {
 			</CardHeader>
 			<CardContent>
 				<div className='h-80 rounded-md border border-dashed'>
-					{/*TODO: ADD ASSET ALLOCATION CHART*/}
+					<ResponsiveContainer
+						width='100%'
+						height='100%'
+					>
+						<BarChart
+							data={data}
+							layout='vertical'
+							barCategoryGap={2}
+						>
+							<XAxis type='number' hide/>
+
+							<YAxis
+								width={100}
+								type='category'
+								dataKey='sector'/>
+
+							<Bar dataKey='allocation' radius={[0, 8, 8, 0]}/>
+						</BarChart>	
+					</ResponsiveContainer>
 				</div>
 			</CardContent>
 		</Card>

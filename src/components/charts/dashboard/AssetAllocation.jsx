@@ -1,4 +1,12 @@
 import {
+	Pie,
+	Cell,
+	Tooltip,
+	PieChart,
+	ResponsiveContainer,
+} from 'recharts'
+
+import {
 	Card,
 	CardTitle,
 	CardHeader,
@@ -6,7 +14,15 @@ import {
 	CardDescription,
 } from '@/components/ui/card'
 
-const AssetAllocation = ({ data }) => {
+import { useState } from 'react'
+
+const AssetAllocation = ({ data, colors }) => {
+	const [activeIndex, setActiveIndex] = useState(0)
+	
+	const handlePieEnter = (_, index) => {
+		setActiveIndex(index)
+	}
+	
 	return (
 		<Card className='transition-shadow hover:shadow-md'>
 			<CardHeader>
@@ -19,7 +35,32 @@ const AssetAllocation = ({ data }) => {
 			</CardHeader>
 			<CardContent>
 				<div className='h-80 rounded-md border border-dashed'>
-					{/*TODO: ADD ASSET ALLOCATION CHART*/}
+					<ResponsiveContainer 
+						width='100%'
+						height='100%'
+					>
+						<PieChart width='100%' >
+							<Pie
+								data={data}
+								dataKey='value'
+								paddingAngle={3}
+    						cornerRadius={6}
+								outerRadius={'80%'}
+								innerRadius={'60%'}
+    						activeIndex={activeIndex}
+    						className='cursor-pointer'
+    						onMouseEnter={handlePieEnter}
+							>
+								{data?.map((_, index) => (
+                    <Cell 
+                    	key={`cell-${index}`}
+                    	fill={colors[index % colors.length]}
+                    />
+                ))}
+							</Pie>
+							<Tooltip />
+						</PieChart>
+					</ResponsiveContainer>
 				</div>
 			</CardContent>
 		</Card>
