@@ -13,6 +13,8 @@ const CheckEmailCard = ({
   email,
   onLogin,
   onResend,
+  expiresIn,
+  canResend=false,
   resendLoading = false,
 }) => {
   return (
@@ -38,11 +40,29 @@ const CheckEmailCard = ({
             Oakfolio account.
           </p>
 
+          {
+            canResend && (
+              <p className='text-center text-sm text-muted-foreground'>
+                Didn't receive the email? You can resend the verification link now.
+              </p>
+            )
+          }
+
+          {!canResend && expiresIn > 0 && (
+            <p className='text-center text-sm text-muted-foreground'>
+              You can request another verification email in{' '}
+              <span className='font-medium'>
+                {Math.floor(expiresIn / 60)}:
+                {String(expiresIn % 60).padStart(2, '0')}
+              </span>
+            </p>
+          )}
+
           <Button
             variant='outline'
             className='w-full'
             onClick={onResend}
-            disabled={resendLoading}
+            disabled={!canResend || resendLoading}
           >
             {resendLoading
               ? 'Sending verification email...'

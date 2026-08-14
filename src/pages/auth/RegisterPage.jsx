@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import RegisterForm from '@/pages/auth/components/RegisterForm'
@@ -14,7 +14,9 @@ const RegisterPage = () => {
 
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
+  const [expiresIn, setExpiresIn] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [canResend, setCanResend] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
 
   const handleEmailInputChange = (event) => {
@@ -28,9 +30,12 @@ const RegisterPage = () => {
     setLoading(true)
 
     try {
-      await authService.register({
+      const response =  await authService.register({
         email,
       })
+      
+      setExpiresIn(response?.expires_in ?? 0)
+      setCanResend(response?.can_resend ?? false)
 
       setStep(REGISTER_STEPS.CHECK_EMAIL)
     } catch (err) {
@@ -47,17 +52,18 @@ const RegisterPage = () => {
     setResendLoading(true)
 
     try {
-      await authService.register({
+     const response =  await authService.register({
         email,
       })
 
+      setCanResend(response?.can_resend ?? false)
+      setExpiresIn(response?.expires_in ?? 0)
       setStep(REGISTER_STEPS.CHECK_EMAIL)
-      // TODO:
-      // await authService.resendVerificationEmail({ email })
     } catch (err) {
       console.error(err)
     } finally {
       setResendLoading(false)
+      setCanResend(false)
     }
   }
 
@@ -65,11 +71,28 @@ const RegisterPage = () => {
     navigateTo('/login')
   }
 
+  useEffect(() => {
+    if (expiresIn <= 0) {
+      setCanResend(true)
+      return
+    }
+
+    const timer = setInterval(() => {
+      setExpiresIn((previous) => previous - 1)
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [expiresIn])
+
+
+
   switch (step) {
     case REGISTER_STEPS.CHECK_EMAIL:
       return (
         <CheckEmailCard
           email={email}
+          canResend={canResend}
+          expiresIn={expiresIn}
           resendLoading={resendLoading}
           onLogin={handleLoginRedirect}
           onResend={handleResendVerificationEmail}
