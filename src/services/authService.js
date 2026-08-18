@@ -6,6 +6,11 @@ const authService = {
 		return response?.data
 	},
 
+	logout: async (data) => {
+		const response = await api.post('/api/v1/auth/logout')
+		return response?.data
+	},
+
 	login: async (data) => {
 		const response = await api.post('/api/v1/auth/login', data)
 		return response?.data
