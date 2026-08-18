@@ -63,8 +63,22 @@ const AuthProvider = ({ children }) => {
 	}
 
 
-	const logout = () => {
-		clearAuth()
+	const logout = async () => {
+		setLoading(true)
+
+		try{
+			const response = await authService.logout()
+
+			clearAuth()
+			
+		}
+		catch(err){
+			clearAuth()
+			throw err
+		}
+		finally{
+			setLoading(false)
+		}
 	}
 
 
