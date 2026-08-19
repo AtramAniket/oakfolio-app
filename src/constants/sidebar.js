@@ -19,10 +19,4 @@ export const SIDEBAR_NAVIGATION = [
     path: '/watchlist',
     icon: Star,
   },
-  {
-    id: 'settings',
-    label: 'Settings',
-    path: '/settings',
-    icon: Settings,
-  },
 ]
