@@ -43,26 +43,27 @@ const AppSidebar = () => {
 		    				SIDEBAR_NAVIGATION.map((item)=>(
 		    					<SidebarMenuItem key={item.id}>
 		    						<SidebarMenuButton
-		    							asChild
 		    							className='h-10'
-		    							tooltip={item.label}>
-		    							<NavLink
-		    							  to={item.path}
-		    							  className={({ isActive }) =>
-		    							    [
-		    							      "flex items-center gap-3 w-full",
-		    							      isActive && "font-semibold",
-		    							    ]
-		    							      .filter(Boolean)
-		    							      .join(" ")
-		    							  }
-		    							>
-		    							  <item.icon className="h-5 w-5 shrink-0" />
-		    							  <span className="truncate text-sm">
-		    							    {item.label}
-		    							  </span>
-		    							</NavLink>
-		    						</SidebarMenuButton>
+		    							tooltip={item.label}
+		    							render={
+		    								<NavLink
+		    								  to={item.path}
+		    								  className={({ isActive }) =>
+		    								    [
+		    								      "flex items-center gap-3 w-full",
+		    								      isActive && "font-semibold",
+		    								    ]
+		    								      .filter(Boolean)
+		    								      .join(" ")
+		    								  }
+		    								>
+		    								  <item.icon className="h-5 w-5 shrink-0" />
+		    								  <span className="truncate text-sm">
+		    								    {item.label}
+		    								  </span>
+		    								</NavLink>
+		    							}
+		    							/>
 		    					</SidebarMenuItem>
 		    				))
 		    			}
