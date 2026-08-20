@@ -21,7 +21,11 @@ const AvatarSelector = ({ selectedAvatar, onSelect }) => {
 								type='button'
 								key={avatar.id}
 								onClick={() => onSelect(avatar.id)}
-								aria-label={`Selected ${avatar.id}`}
+								aria-label={
+								isSelected
+									? `Selected ${avatar.id}`
+									: `Select ${avatar.id}`
+								}
 								className='relative rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
 							>
 								<Avatar
@@ -33,7 +37,7 @@ const AvatarSelector = ({ selectedAvatar, onSelect }) => {
 								>
 									<AvatarImage
 										src={avatar.src}
-										alt=''
+										alt={avatar.id}
 									/>
 									<AvatarFallback>
 										{avatar.fallback}

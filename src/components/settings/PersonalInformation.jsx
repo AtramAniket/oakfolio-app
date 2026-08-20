@@ -5,10 +5,10 @@ import { useAuth } from '@/hooks/useAuth'
 import { Lock, UserRound } from 'lucide-react'
 
 import {
-	Card,
-	CardTitle,
-	CardHeader,
-	CardContent,
+  Card,
+  CardTitle,
+  CardHeader,
+  CardContent,
 } from '@/components/ui/card'
 
 import { Input } from '@/components/ui/input'
@@ -17,39 +17,62 @@ import { Label } from '@/components/ui/label'
 
 import { Button } from '@/components/ui/button'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/ui/avatar'
 
 import AvatarSelector from '@/components/settings/AvatarSelector'
 
+import { AVATARS } from '@/constants/avatars'
+
 
 const PersonalInformation = () => {
-	const { user } = useAuth()
+  const { user } = useAuth()
 
-	const [username, setUsername] = useState(user?.username ?? '')
+  const [username, setUsername] = useState(user?.username ?? '')
 
-	const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar_id ?? 'avatar_1')
+  const [selectedAvatar, setSelectedAvatar] = useState(() => {
+    if (user?.avatar_id) {
+      return user.avatar_id
+    }
 
-	useEffect(() => {
+    const randomIndex = Math.floor(
+      Math.random() * AVATARS.length
+    )
+
+    return AVATARS[randomIndex].id
+  })
+
+  useEffect(() => {
     if (!user) return
 
     setUsername(user.username ?? '')
-    setSelectedAvatar(user.avatar_id ?? 'avatar_01')
+
+    if (user.avatar_id) {
+      setSelectedAvatar(user.avatar_id)
+    }
   }, [user])
 
-	const handleSave = () => {
-		// TODO: INTEGRATE BACK-END
-		console.log({
-			username,
-			avatar_id: selectedAvatar,
-		})
-	}
+  const handleSave = () => {
+    // TODO: INTEGRATE BACK-END
+    console.log({
+      username,
+      avatar_id: selectedAvatar,
+    })
+  }
+
+  const selectedAvatarData = AVATARS.find(
+    (avatar) => avatar.id === selectedAvatar
+  )
 
   const avatarFallback = username
-  ? username.charAt(0).toUpperCase()
-  : 'U'
+    ? username.charAt(0).toUpperCase()
+    : 'U'
 
-	return (
-		<Card className="overflow-hidden p-0" >
+  return (
+    <Card className='overflow-hidden p-0'>
       <CardHeader className='border-b bg-muted/50 px-6 py-4'>
         <div className='flex items-center gap-3'>
           <UserRound className='h-7 w-7' />
@@ -69,6 +92,11 @@ const PersonalInformation = () => {
         {/* Profile preview */}
         <div className='flex items-center gap-4'>
           <Avatar className='h-16 w-16'>
+            <AvatarImage
+              src={selectedAvatarData?.src}
+              alt={selectedAvatarData?.id}
+            />
+
             <AvatarFallback className='text-lg'>
               {avatarFallback}
             </AvatarFallback>
@@ -142,7 +170,7 @@ const PersonalInformation = () => {
 
       </CardContent>
     </Card>
-	)
+  )
 }
 
 export default PersonalInformation
