@@ -1,9 +1,3 @@
-import { useState, useEffect } from 'react'
-
-import { useAuth } from '@/hooks/useAuth'
-
-import { Lock, UserRound } from 'lucide-react'
-
 import {
   Card,
   CardTitle,
@@ -11,25 +5,26 @@ import {
   CardContent,
 } from '@/components/ui/card'
 
-import { Input } from '@/components/ui/input'
-
-import { Label } from '@/components/ui/label'
-
-import { Button } from '@/components/ui/button'
-
 import {
   Avatar,
-  AvatarFallback,
   AvatarImage,
+  AvatarFallback,
 } from '@/components/ui/avatar'
 
+import { useAuth } from '@/hooks/useAuth'
+import { useState, useEffect } from 'react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { AVATARS } from '@/constants/avatars'
+import { Lock, UserRound } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import authService from '@/services/authService'
 import AvatarSelector from '@/components/settings/AvatarSelector'
 
-import { AVATARS } from '@/constants/avatars'
 
 
 const PersonalInformation = () => {
-  const { user } = useAuth()
+  const { user, refreshUser } = useAuth()
 
   const [username, setUsername] = useState(user?.username ?? '')
 
@@ -55,12 +50,23 @@ const PersonalInformation = () => {
     }
   }, [user])
 
-  const handleSave = () => {
-    // TODO: INTEGRATE BACK-END
-    console.log({
-      username,
-      avatar_id: selectedAvatar,
-    })
+  const handleSave = async () => {
+    
+    try{
+      const payload = {
+        username: username,
+        avatar_id: selectedAvatar,
+      }
+
+      const response = await authService.updateUser(payload)
+
+      console.log(response?.message)
+
+      await refreshUser()
+    }
+    catch(error){
+      console.error(error)
+    }
   }
 
   const selectedAvatarData = AVATARS.find(

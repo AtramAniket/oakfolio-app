@@ -10,17 +10,33 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 
+import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
+import authService from '@/services/authService'
+
 
 const DeleteAccountDialog = () => {
+  const { logout } = useAuth()
+  
   const [open, setOpen] = useState(false)
 
-  const handleDelete = () => {
-    // TODO: ADD BACK-END LOGIC
-    console.log('Delete account')
+  const handleDeleteAccount = async () => {
+    try{
 
-    setOpen(false)
+      const response = await authService.deleteUser()
+
+      console.log(response?.message)
+
+      await logout()
+    }
+    catch(error){
+      console.error(error)
+    }
+    finally{
+      setOpen(false)
+    }
   }
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -52,7 +68,7 @@ const DeleteAccountDialog = () => {
 
           <Button
             variant='destructive'
-            onClick={handleDelete}
+            onClick={handleDeleteAccount}
           >
             Delete account
           </Button>

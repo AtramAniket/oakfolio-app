@@ -1,6 +1,7 @@
 import api from '@/api/api'
 
 const authService = {
+	
 	getCurrentUser: async () => {
 		const response = await api.get('/api/v1/auth/me')
 		return response?.data
@@ -16,8 +17,23 @@ const authService = {
 		return response?.data
 	},
 
+	deleteUser: async () => {
+		const response = await api.delete('/api/v1/auth/delete_user')
+		return response?.data
+	},
+
 	register: async (data) => {
 		const response = await api.post('/api/v1/auth/register', data)
+		return response?.data
+	},
+
+	createNewUser: async (data) => {
+		const response = await api.post('/api/v1/auth/create_user', data)
+		return response?.data
+	},
+
+	updateUser: async (data) => {
+		const response = await api.patch('/api/v1/auth/update_user', data)
 		return response?.data
 	},
 
@@ -26,10 +42,6 @@ const authService = {
 		return response?.data
 	},
 
-	createNewUser: async (data) => {
-		const response = await api.post('/api/v1/auth/create_user', data)
-		return response?.data
-	},
 }
 
 export default authService

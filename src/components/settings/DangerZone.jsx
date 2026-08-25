@@ -1,12 +1,11 @@
-import { Trash2 } from 'lucide-react'
-
 import {
   Card,
-  CardContent,
-  CardHeader,
   CardTitle,
+  CardHeader,
+  CardContent,
 } from '@/components/ui/card'
 
+import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import DeleteAccountDialog from '@/components/settings/DeleteAccountDialog'
 

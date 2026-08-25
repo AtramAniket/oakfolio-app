@@ -8,11 +8,38 @@ import {
 } from '@/components/ui/card'
 
 import { Bell } from 'lucide-react'
+import { useAuth } from '@/hooks/useAuth'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import authService from '@/services/authService'
 
 const NotificationSettings = () => {
-  const [emailNotifications, setEmailNotifications] = useState(true)
+  const { user, refreshUser } = useAuth()
+
+  const [emailNotifications, setEmailNotifications] = useState( user?.notifications_enabled)
+
+  const handleNotificationToggleChange = async () => {
+    const nextValue = !emailNotifications
+
+    setEmailNotifications(nextValue)
+
+    try {
+      const payload = {
+        notifications_enabled: nextValue,
+      }
+
+      const response = await authService.updateUser(payload)
+
+      console.log(response?.message)
+
+      await refreshUser()
+    } catch (error) {
+      console.error(error)
+
+      // Roll back UI if API request fails
+      setEmailNotifications(!nextValue)
+    }
+  }
 
   return (
     <Card className="overflow-hidden p-0" >
@@ -44,7 +71,7 @@ const NotificationSettings = () => {
           <Switch
             id='email-notifications'
             checked={emailNotifications}
-            onCheckedChange={setEmailNotifications}
+            onCheckedChange={handleNotificationToggleChange}
           />
         </div>
       </CardContent>
