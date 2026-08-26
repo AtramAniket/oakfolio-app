@@ -314,7 +314,7 @@ const PortfolioPage = () => {
 
                       <TableHead>Added</TableHead>
 
-                      <TableHead className="text-right">Buy Price</TableHead>
+                      <TableHead className="text-right">Invested Amount</TableHead>
 
                       <TableHead className="text-right">
                         Current Price
@@ -344,7 +344,7 @@ const PortfolioPage = () => {
                         </TableCell>
 
                         <TableCell className="text-right">
-                          ₹{holding.buy_price}
+                          ₹{holding.invested_amount}
                         </TableCell>
 
                         <TableCell className="text-right text-muted-foreground">
